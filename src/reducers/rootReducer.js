@@ -1,4 +1,4 @@
-import {FETCH_TASKS_PENDING, FETCH_TASKS_SUCCESS, FETCH_TASKS_ERROR, ADD_TASK, DELETE_TASK} from '../actions'; 
+import {FETCH_TASKS_PENDING, FETCH_TASKS_SUCCESS, FETCH_TASKS_ERROR, ADD_TASK, DELETE_TASK, SET_TASK_DONE} from '../actions'; 
 
 const initState = {
     pending:false,
@@ -39,6 +39,11 @@ const rootReducer = (state = initState, action) => {
                 ...state,
                 tasks:newTaks
             }
+        case SET_TASK_DONE:
+            return [
+            ...state,
+            {...state[action.index], taskStatus:true}
+        ]
         default: 
             return state;
     }

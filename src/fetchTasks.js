@@ -1,4 +1,4 @@
-import {fetchTaskPending, fetchTaskSuccess, fetchTaskError, addTask} from './actions';
+import {fetchTaskPending, fetchTaskSuccess, fetchTaskError, addTask, setTaskDone} from './actions';
 
 function fetchTasks() {
     return dispatch => {
@@ -30,7 +30,6 @@ function addTaskDB(task){
             if(res.message==='error') {
                 throw(res.error);
             }
-            window.Materialize.toast('Task completed!', 4000);
             return res.message;
         })
         .catch(error => {
@@ -39,12 +38,15 @@ function addTaskDB(task){
     }
 }
 
-function setTaskDone(taskId){
+function setTaskDoneDB(taskId){
     return dispatch => {
         dispatch(fetchTaskPending());
         fetch('http://localhost:4000/task/update',{
+            method:'POST',
             body: JSON.stringify({
-                id: taskId
+                id: taskId,
+                flag:'done',
+                state: true
             })
         })
         .then(res => res.json())
@@ -53,7 +55,6 @@ function setTaskDone(taskId){
                 throw(res.error);
             }
             dispatch(setTaskDone(taskId));
-            window.Materialize.toast('Task completed!', 4000);
             return res.message;
         })
         .catch(error => {
@@ -66,6 +67,7 @@ function updateTask(task){
     return dispatch => {
         dispatch(fetchTaskPending());
         fetch('http://localhost:4000/task/update',{
+            method:'POST',
             body:JSON.stringify(task)
         })
         .then(res => res.json())
@@ -74,7 +76,6 @@ function updateTask(task){
                 throw(res.error);
             }
             dispatch(updateTask(task));
-            window.Materialize.toast('Task updated!', 4000);
             return res.message;
         })
         .catch(error => {
@@ -87,6 +88,7 @@ function deleteTask(taskId){
         return dispatch => {
             dispatch(fetchTaskPending());
             fetch('http://localhost:4000/task/delete',{
+                method:'POST',
                 body: JSON.stringify({
                     id: taskId
                 })
@@ -97,7 +99,6 @@ function deleteTask(taskId){
                     throw(res.error);
                 }
                 dispatch(deleteTask(taskId));
-                window.Materialize.toast('Task deleted!', 4000);
                 return res.message;
             })
             .catch(error => {
@@ -109,7 +110,7 @@ function deleteTask(taskId){
 export {
     fetchTasks,
     addTaskDB,
-    setTaskDone,
+    setTaskDoneDB,
     updateTask,
     deleteTask
 }

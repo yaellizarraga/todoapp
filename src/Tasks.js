@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getTasksError, getTasks, getTasksPending} from './reducers/rootReducer';
-import {fetchTasks, setTaskDone, updateTask, deleteTask, addTaskDB} from './fetchTasks';
+import {fetchTasks, setTaskDoneDB, updateTask, deleteTask, addTaskDB} from './fetchTasks';
 
 class Tasks extends Component{
 
@@ -11,23 +11,11 @@ class Tasks extends Component{
         fetchTasks();
     }
 
-    handleDone(taskId) {
-        setTaskDone(taskId);
-    }
-
-    handleUpdate(taskId) {
-        updateTask(taskId);
-    }
-
-    handleDelete (taskId) {
-        deleteTask(taskId);
-    }
-
     render(){
         console.log(this.props);
         const {tasks} = this.props; 
         const taskList = tasks.length ? (
-            tasks.map(task => {
+            tasks.map((task, index) => {
                 return(
                     <li key={task._id}>
                         <div className="collapsible-header blue-text">{task.title}<span className="new badge" data-badge-caption={(task.taskStatus)?'Completed':'Pending...'}></span></div>
@@ -37,9 +25,9 @@ class Tasks extends Component{
                             <p>Date: {task.date}</p>
                             </div>
                             <div className="right-align">
-                                <button className="btn btn-primary" onClick={this.handleDone(task._id)}>Set as done</button>
-                                <button className="btn btn-primary" onClick={this.handleUpdate(task._id)}>Update task</button>
-                                <button className="btn btn-primary" onClick={this.handleDelete(task._id)}>Delete from list</button>
+                                <button className="btn btn-primary" onClick={()=> this.props.setTaskDone(index)}>Set as done</button>
+                                <button className="btn btn-primary">Update task</button>
+                                <button className="btn btn-primary">Delete from list</button>
                             </div>
                         </div>
                     </li>
@@ -68,9 +56,7 @@ const mapStateProps = (state) => {
 
   const mapDispatchToProps = dispatch => bindActionCreators({
     fetchTasks: fetchTasks,
-    addTaskDB: addTaskDB,
-    deleteTask: deleteTask,
-    setTaskDone: setTaskDone
+    setTaskDone: setTaskDoneDB 
 }, dispatch)
 
 export default connect(mapStateProps, mapDispatchToProps)(Tasks);
