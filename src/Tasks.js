@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {getTasksError, getTasks, getTasksPending} from './reducers/rootReducer';
-import {fetchTasks, setTaskDoneDB, updateTask, deleteTask, addTaskDB} from './fetchTasks';
+import {fetchTasks, setTaskDoneDB} from './fetchTasks';
 
 class Tasks extends Component{
 
@@ -25,7 +25,7 @@ class Tasks extends Component{
                             <p>Date: {task.date}</p>
                             </div>
                             <div className="right-align">
-                                <button className="btn btn-primary" onClick={()=> this.props.setTaskDone(index)}>Set as done</button>
+                                <button className="btn btn-primary" onClick={()=> this.props.setTaskDone(index, task._id)}>Set as done</button>
                                 <button className="btn btn-primary">Update task</button>
                                 <button className="btn btn-primary">Delete from list</button>
                             </div>
@@ -34,7 +34,7 @@ class Tasks extends Component{
                 )
             })  
         ):(
-            <div className="center">
+            <div className="center white-text">
                 No task to do. oh yeah!
             </div>
         )
@@ -56,7 +56,7 @@ const mapStateProps = (state) => {
 
   const mapDispatchToProps = dispatch => bindActionCreators({
     fetchTasks: fetchTasks,
-    setTaskDone: setTaskDoneDB 
+    setTaskDone: setTaskDoneDB
 }, dispatch)
 
 export default connect(mapStateProps, mapDispatchToProps)(Tasks);

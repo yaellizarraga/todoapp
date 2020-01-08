@@ -4,6 +4,7 @@ export const FETCH_TASKS_ERROR = 'FETCH_TASKS_ERROR';
 export const ADD_TASK = 'ADD_TASK';
 export const DELETE_TASK = 'DELETE_TASK';
 export const SET_TASK_DONE = 'SET_TASK_DONE';
+export const UPDATE_TASK = 'UPDATE_TASK';
 
 export function fetchTaskPending() {
     return {
@@ -39,9 +40,16 @@ export function deleteTask(taskId){
     }
 }
 
-export function setTaskDone(taskId){
+export function setTaskDone(positionInState, taskId){
     return {
         type:SET_TASK_DONE,
-        id:taskId
+        id: taskId
+    }
+}
+
+export function updateTask(taskUodated){
+    return {
+        type:UPDATE_TASK,
+        task: taskUodated
     }
 }

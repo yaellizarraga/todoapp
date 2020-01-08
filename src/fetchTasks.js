@@ -20,16 +20,20 @@ function fetchTasks() {
 
 function addTaskDB(task){
     return dispatch => {
-        dispatch(fetchTaskPending());
-        dispatch(addTask(task));
+        dispatch({type:'SET_ACTION_INSERT', payload: 'INSERT'});
         fetch('http://localhost:4000/task/create',{
-            body: JSON.stringify(task)
+            method:'POST',
+            body: JSON.stringify(task),
+            headers:{
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {
             if(res.message==='error') {
                 throw(res.error);
             }
+            dispatch(addTask(res.task));
             return res.message;
         })
         .catch(error => {
@@ -38,23 +42,24 @@ function addTaskDB(task){
     }
 }
 
-function setTaskDoneDB(taskId){
+function setTaskDoneDB(index, taskId){
     return dispatch => {
-        dispatch(fetchTaskPending());
         fetch('http://localhost:4000/task/update',{
             method:'POST',
             body: JSON.stringify({
                 id: taskId,
-                flag:'done',
-                state: true
-            })
+                flag:'done'
+            }),
+            headers:{
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {
             if(res.message==='error') {
                 throw(res.error);
             }
-            dispatch(setTaskDone(taskId));
+            dispatch(setTaskDone(index, taskId));
             return res.message;
         })
         .catch(error => {
@@ -65,10 +70,13 @@ function setTaskDoneDB(taskId){
 
 function updateTask(task){
     return dispatch => {
-        dispatch(fetchTaskPending());
+        dispatch({type:'SET_ACTION_UPDATE', payload: 'UPDATE'});
         fetch('http://localhost:4000/task/update',{
             method:'POST',
-            body:JSON.stringify(task)
+            body:JSON.stringify(task),
+            headers:{
+                'Content-Type':'application/json'
+            }
         })
         .then(res => res.json())
         .then(res => {
@@ -86,12 +94,14 @@ function updateTask(task){
 
 function deleteTask(taskId){
         return dispatch => {
-            dispatch(fetchTaskPending());
             fetch('http://localhost:4000/task/delete',{
                 method:'POST',
                 body: JSON.stringify({
                     id: taskId
-                })
+                }),
+                headers:{
+                    'Content-Type':'application/json'
+                }
             })
             .then(res => res.json())
             .then(res => {
