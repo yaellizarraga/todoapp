@@ -5,6 +5,12 @@ export const ADD_TASK = 'ADD_TASK';
 export const DELETE_TASK = 'DELETE_TASK';
 export const SET_TASK_DONE = 'SET_TASK_DONE';
 export const UPDATE_TASK = 'UPDATE_TASK';
+export const SET_TASK_NOT_DONE = 'SET_TASK_NOT_DONE';
+export const SHOW_ALL_TODOS = 'SHOW_ALL_TODOS';
+export const SHOW_ALL_COMPLETE = 'SHOW_ALL_COMPLETE';
+export const SHOW_ALL_PENDING = 'SHOW_ALL_PENDING';
+export const SET_FILTER = 'SET_FILTER';
+export const SET_TO_UPDATE = 'SET_TO_UPDATE';
 
 export function fetchTaskPending() {
     return {
@@ -36,7 +42,7 @@ export function addTask(task){
 export function deleteTask(taskId){
     return {
         type:DELETE_TASK,
-        index:taskId
+        id:taskId
     }
 }
 
@@ -51,5 +57,26 @@ export function updateTask(taskUodated){
     return {
         type:UPDATE_TASK,
         task: taskUodated
+    }
+}
+
+export function setTaskNotDone(positionInState, taskId){
+    return {
+        type:SET_TASK_NOT_DONE,
+        id:taskId
+    }
+}
+
+export function setFIlterAction(filterToSee){      
+    return {
+        type: SET_FILTER,
+        filter:filterToSee
+    }
+}
+
+export function setTaskUpdateAction(taskId){
+    return {
+        type: SET_TO_UPDATE,
+        id:taskId
     }
 }

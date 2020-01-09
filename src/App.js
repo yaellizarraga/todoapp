@@ -19,14 +19,16 @@ function App(props) {
     updateTask(task);
   }
 
-  const cancelAdd = (title, description) => {
+  const cancelAdd = (title, description, date) => {
     title.value = "";
     description.value ="";
+    date.value = "";
   }
+
   return (
     <div className="container">
-      <div className="center white-text"><strong><h3>My todo list</h3></strong></div>
-        <Tasks />
+      <div className="center white-text"><strong><h3>Good morning yael! today you have to...</h3></strong></div>
+        <Tasks filter={null}/>
         <TaskModal handleAddTask={saveTask} handleUpdate={updateTask} handleCloseModal={cancelAdd} />
         <FloatButton />
       </div>

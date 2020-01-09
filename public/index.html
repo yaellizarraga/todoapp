@@ -49,6 +49,11 @@
            $('.fixed-action-btn').floatingActionButton();
            $('.modal').modal();
            $('.datepicker').datepicker();
+           $('select').formSelect();
+           $('#addUpdate').click(function(){
+              var instance = M.Modal.getInstance($('#modal1'));
+              instance.close();
+            });
         });
   </script>
   </body>

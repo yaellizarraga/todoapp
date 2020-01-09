@@ -1,4 +1,4 @@
-import {fetchTaskPending, fetchTaskSuccess, fetchTaskError, addTask, setTaskDone} from './actions';
+import {fetchTaskPending, fetchTaskSuccess, fetchTaskError, addTask, setTaskDone, setTaskNotDone, deleteTask, setFIlterAction, setTaskUpdateAction} from './actions';
 
 function fetchTasks() {
     return dispatch => {
@@ -20,7 +20,6 @@ function fetchTasks() {
 
 function addTaskDB(task){
     return dispatch => {
-        dispatch({type:'SET_ACTION_INSERT', payload: 'INSERT'});
         fetch('http://localhost:4000/task/create',{
             method:'POST',
             body: JSON.stringify(task),
@@ -68,9 +67,34 @@ function setTaskDoneDB(index, taskId){
     }
 }
 
+function setTaskNotDoneDB(index, taskId){
+    return dispatch => {
+        fetch('http://localhost:4000/task/update',{
+            method:'POST',
+            body: JSON.stringify({
+                id: taskId,
+                flag:'notDone'
+            }),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(res => {
+            if(res.message==='error') {
+                throw(res.error);
+            }
+            dispatch(setTaskNotDone(index, taskId));
+            return res.message;
+        })
+        .catch(error => {
+            dispatch(fetchTaskError(error));
+        })
+    }
+}
+
 function updateTask(task){
     return dispatch => {
-        dispatch({type:'SET_ACTION_UPDATE', payload: 'UPDATE'});
         fetch('http://localhost:4000/task/update',{
             method:'POST',
             body:JSON.stringify(task),
@@ -84,15 +108,16 @@ function updateTask(task){
                 throw(res.error);
             }
             dispatch(updateTask(task));
+            dispatch({type:'SET_ACTION_INSERT', mode:'INSERT'});
             return res.message;
         })
         .catch(error => {
             dispatch(fetchTaskError(error));
         })
-}
+   }
 }
 
-function deleteTask(taskId){
+function deleteTaskDB(taskId){
         return dispatch => {
             fetch('http://localhost:4000/task/delete',{
                 method:'POST',
@@ -117,10 +142,33 @@ function deleteTask(taskId){
     }
 }
 
+function setFilterDB(filter){
+    return dispatch => {
+        dispatch(setFIlterAction(filter));
+    }
+}
+
+function setTaskUpdateDB(taskId){
+    return dispatch => {
+        dispatch({type:'SET_ACTION_UPDATE', mode:'UPDATE'});
+        dispatch(setTaskUpdateAction(taskId));
+    }
+}
+
+function setInsertMode(){
+    return dispatch => {
+        dispatch({type:'SET_ACTION_INSERT', mode:'INSERT'});
+    }
+}
+
 export {
     fetchTasks,
     addTaskDB,
     setTaskDoneDB,
     updateTask,
-    deleteTask
+    deleteTaskDB,
+    setTaskNotDoneDB,
+    setFilterDB,
+    setTaskUpdateDB,
+    setInsertMode
 }

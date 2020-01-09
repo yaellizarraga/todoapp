@@ -1,10 +1,23 @@
-import {FETCH_TASKS_PENDING, FETCH_TASKS_SUCCESS, FETCH_TASKS_ERROR, ADD_TASK, DELETE_TASK, SET_TASK_DONE, UPDATE_TASK} from '../actions'; 
+import {
+    FETCH_TASKS_PENDING, 
+    FETCH_TASKS_SUCCESS, 
+    FETCH_TASKS_ERROR, 
+    ADD_TASK, 
+    DELETE_TASK, 
+    SET_TASK_DONE, 
+    UPDATE_TASK, 
+    SET_TASK_NOT_DONE, 
+    SET_FILTER, 
+    SET_TO_UPDATE
+} from '../actions'; 
 
 const initState = {
-    action:null,
+    filter:null,
+    action:'INSERT',
     pending:false,
     users:[],
     tasks:[],
+    toUpdate:[],
     error:null
 };
 
@@ -20,6 +33,11 @@ const rootReducer = (state = initState, action) => {
                 ...state,
                 action:action.payload
             }
+        case SET_FILTER:
+                return {
+                    ...state,
+                    filter:action.filter
+                }
         case FETCH_TASKS_PENDING: 
             return {
                 ...state,
@@ -43,8 +61,8 @@ const rootReducer = (state = initState, action) => {
                 tasks:[...state.tasks, action.task]
             }
         case DELETE_TASK:
-            let newTaks = state.task.filter(task => {
-                return task.id !== action.id
+            let newTaks = state.tasks.filter(task => {
+                return task._id !== action.id
             });
             return {
                 ...state,
@@ -63,6 +81,19 @@ const rootReducer = (state = initState, action) => {
             tasks:tasksUpdated1,
             pending:false,
         }
+        case SET_TASK_NOT_DONE:
+            const index2 = state.tasks.findIndex((task)=>{
+                return task._id === action.id
+            });
+            const task2 = Object.assign({}, state.tasks[index2]);
+            task2.taskStatus = false;
+            const tasksUpdated2 = Object.assign([], state.tasks);
+            tasksUpdated2[index2] = task2;
+        return {
+            ...state,
+            tasks:tasksUpdated2,
+            pending:false,
+        }
         case UPDATE_TASK:
             const index = state.tasks.findIndex((task)=>{
                 return task._id === action.task.id
@@ -78,14 +109,32 @@ const rootReducer = (state = initState, action) => {
             ...state,
             tasks:tasksUpdated
         }
+        case SET_TO_UPDATE:
+            const indexUpdate = state.tasks.findIndex((task)=>{
+                return task._id === action.id
+            });
+            const taskToUpdate = Object.assign({}, state.tasks[indexUpdate]);
+            return{
+                ...state,
+                toUpdate:{
+                    title:taskToUpdate.title,
+                    description:taskToUpdate.description,
+                    date:taskToUpdate.date,
+                    taskStatus:taskToUpdate.taskStatus
+                }
+            }
         default: 
             return state;
     }
 };
 
+export const getFIlter = state => state.filter;
 export const getAction = state => state.action;
 export const getTasks = state => state.tasks;
 export const getTasksPending = state => state.pending;
 export const getTasksError = state => state.error;
+export const getPending = state => state.tasks.filter(task => !task.taskStatus);
+export const getComplete = state => state.tasks.filter(task => task.taskStatus);
+export const taskToUpdate = state => state.toUpdate;
 
 export default rootReducer;

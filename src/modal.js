@@ -1,11 +1,12 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {getTasksError, getTasks, getTasksPending, getAction} from './reducers/rootReducer';
+import {getTasksError, getTasks, getTasksPending, getAction, taskToUpdate} from './reducers/rootReducer';
 
 const TaskModal = (props) => {
      const title = React.createRef();
      const description = React.createRef();
      const date = React.createRef();
+        
     return (
         <div id="modal1" className="modal">
             <form onSubmit={(e) =>{
@@ -15,7 +16,7 @@ const TaskModal = (props) => {
                             description: description.current.value,
                             date:date.current.value
                         };
-                        if(props.action==null){
+                        if(props.action==='INSERT'){
                             props.handleAddTask(task);
                         }else if(props.action==='UPDATE'){  
                             props.handleUpdate(task);
@@ -43,8 +44,8 @@ const TaskModal = (props) => {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" className="waves-effect waves-green btn-flat">{(props.action===null)?'Add task':'Update task'}</button>
-              <a href="#!" className="modal-close waves-effect waves-green btn-flat" onClick={() => {props.handleCloseModal(title.current, description.current)}}>Cancel</a>
+                <button type="submit" id="addUpdate" className="waves-effect waves-green btn-flat">{(props.action==='INSERT')?'Add task':'Update task'}</button>
+                <a href="#!" className="modal-close waves-effect waves-green btn-flat" onClick={() => {props.handleCloseModal(title.current, description.current, date.current)}}>Cancel</a>
             </div>
             </form>
         </div>
@@ -56,7 +57,8 @@ const mapStateProps = (state) => {
       action:getAction(state),
       error: getTasksError(state),
       tasks: getTasks(state),
-      pending: getTasksPending(state)
+      pending: getTasksPending(state),
+      taskToUpdate: taskToUpdate(state)
     }
   };
 

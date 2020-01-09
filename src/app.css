@@ -10,3 +10,9 @@ body{
 .btn{
     margin: 1%;
 }
+
+.select-wrapper{
+    background-color:white;
+    color:white;
+    padding: 0.5%;
+}
