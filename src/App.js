@@ -6,7 +6,7 @@ import './app.css';
 import FloatButton from './floatingButton';
 import TaskModal from './modal';
 import {getTasksError, getTasks, getTasksPending} from './reducers/rootReducer';
-import {addTaskDB, updateTask} from './fetchTasks';
+import {addTaskDB, updateTask, setInsertMode} from './fetchTasks';
 
 function App(props) {
   const saveTask = (task) => {
@@ -23,6 +23,8 @@ function App(props) {
     title.value = "";
     description.value ="";
     date.value = "";
+    const {setInsertModeP} = props;
+    setInsertModeP();
   }
 
   return (
@@ -45,7 +47,8 @@ const mapStateProps = (state) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   addTask: addTaskDB,
-  updateTask: updateTask
+  updateTask: updateTask,
+  setInsertModeP:setInsertMode
 }, dispatch)
 
 export default connect(mapStateProps, mapDispatchToProps)(App);

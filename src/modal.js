@@ -1,42 +1,64 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import {connect} from 'react-redux';
 import {getTasksError, getTasks, getTasksPending, getAction, taskToUpdate} from './reducers/rootReducer';
 
 const TaskModal = (props) => {
+     const idTask = React.createRef();
      const title = React.createRef();
      const description = React.createRef();
      const date = React.createRef();
-        
+     useEffect(() => {
+        if(props.taskToUpdate.title !== undefined){
+            idTask.current.value = props.taskToUpdate.id;
+            title.current.value = props.taskToUpdate.title;
+            description.current.value = props.taskToUpdate.description;
+            date.current.value = props.taskToUpdate.date;
+        }
+      });
     return (
         <div id="modal1" className="modal">
             <form onSubmit={(e) =>{
                         e.preventDefault();
                         var task = {
+                            id:idTask.current.value,
                             title: title.current.value,
                             description: description.current.value,
                             date:date.current.value
                         };
+                        console.log(task);
+                        console.log(props.action);
                         if(props.action==='INSERT'){
-                            props.handleAddTask(task);
+                            if(title.current.value ==='' || description.current.value ==='' || date.current.value===''){
+                                alert('Cannot send empty fields');
+                                return false;
+                            }else{
+                               props.handleAddTask(task);
+                            }
+                            
                         }else if(props.action==='UPDATE'){  
-                            props.handleUpdate(task);
+                            if(idTask.current.value ==='' || title.current.value ==='' || description.current.value ==='' || date.current.value===''){
+                                alert('Cannot send empty fields or task id is unavailable');
+                                return false;
+                            }else{
+                                props.handleUpdate(task);
+                            }
                         }
                     }}>
             <div className="modal-content">
-            <h4>New task</h4>
+            <h4>{(props.action==='INSERT')?'New task':'Update task'}</h4>
                 <div className="row">
-                    
                     <div className="col s12">
+                        <input type="hidden" ref={idTask}></input>
                         <div className="input-field col s12">
-                            <input type="text" className="validate" name="title" ref={title}/>
+                            <input type="text" className="validate" id="title" name="title" ref={title}/>
                             <label>Title</label>
                         </div>
                         <div className="input-field col s12">
-                        <input type="text" className="validate" name="description" ref={description}/>
+                        <input type="text" className="validate" id="description" name="description" ref={description}/>
                             <label>Description</label>
                         </div>
                         <div className="input-field col s12">
-                         <input type="text" className="datepicker" name="date" ref={date}/>
+                         <input type="text" className="datepicker" id="date" name="date" ref={date}/>
                          <label>Date</label>
                         </div>
                     </div>

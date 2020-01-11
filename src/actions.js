@@ -53,7 +53,7 @@ export function setTaskDone(positionInState, taskId){
     }
 }
 
-export function updateTask(taskUodated){
+export function updateTaskAction(taskUodated){
     return {
         type:UPDATE_TASK,
         task: taskUodated

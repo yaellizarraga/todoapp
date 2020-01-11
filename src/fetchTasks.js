@@ -1,4 +1,4 @@
-import {fetchTaskPending, fetchTaskSuccess, fetchTaskError, addTask, setTaskDone, setTaskNotDone, deleteTask, setFIlterAction, setTaskUpdateAction} from './actions';
+import {fetchTaskPending, fetchTaskSuccess, fetchTaskError, addTask, setTaskDone, setTaskNotDone, deleteTask, setFIlterAction, setTaskUpdateAction, updateTaskAction} from './actions';
 
 function fetchTasks() {
     return dispatch => {
@@ -97,7 +97,10 @@ function updateTask(task){
     return dispatch => {
         fetch('http://localhost:4000/task/update',{
             method:'POST',
-            body:JSON.stringify(task),
+            body:JSON.stringify({
+                task: task,
+                flag:'update'
+            }),
             headers:{
                 'Content-Type':'application/json'
             }
@@ -107,7 +110,7 @@ function updateTask(task){
             if(res.message==='error') {
                 throw(res.error);
             }
-            dispatch(updateTask(task));
+            dispatch(updateTaskAction(task));
             dispatch({type:'SET_ACTION_INSERT', mode:'INSERT'});
             return res.message;
         })

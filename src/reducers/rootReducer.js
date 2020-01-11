@@ -11,6 +11,7 @@ import {
     SET_TO_UPDATE
 } from '../actions'; 
 
+//Initial state
 const initState = {
     filter:null,
     action:'INSERT',
@@ -26,12 +27,13 @@ const rootReducer = (state = initState, action) => {
         case 'SET_ACTION_INSERT':
             return {
                 ...state,
-                action:action.payload
+                action:action.mode,
+                toUpdate:[]
             }
         case 'SET_ACTION_UPDATE':
             return {
                 ...state,
-                action:action.payload
+                action:action.mode
             }
         case SET_FILTER:
                 return {
@@ -117,6 +119,7 @@ const rootReducer = (state = initState, action) => {
             return{
                 ...state,
                 toUpdate:{
+                    id:taskToUpdate._id,
                     title:taskToUpdate.title,
                     description:taskToUpdate.description,
                     date:taskToUpdate.date,
@@ -128,6 +131,7 @@ const rootReducer = (state = initState, action) => {
     }
 };
 
+//Exporting specific info from the store to attach them to the components if we need it.
 export const getFIlter = state => state.filter;
 export const getAction = state => state.action;
 export const getTasks = state => state.tasks;

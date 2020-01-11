@@ -65,7 +65,7 @@ class Tasks extends Component{
                             this.props.setFIlter('all');
                         }
                     }}>
-                    <option value="all" selected>Show All</option>
+                    <option value="all" defaultValue={'DEFAULT'}>Show All</option>
                     <option value="completed">Show Completed</option>
                     <option value="pending">Show Pending</option>
                 </select>
